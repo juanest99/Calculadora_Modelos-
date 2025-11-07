@@ -1,4 +1,6 @@
 package calculadora;
+import command.*;
+import memento.Memento;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +31,8 @@ public class Calculadora extends JFrame implements ActionListener {
         display.setFont(new Font("Arial", Font.BOLD, 28));
         display.setHorizontalAlignment(JTextField.RIGHT);
         display.setEditable(false);
+        display.setBackground(Color.BLACK);
+        display.setForeground(Color.WHITE);
         panel.add(display, BorderLayout.NORTH);
 
         JPanel panelBotones = new JPanel(new GridLayout(5, 4, 5, 5));
@@ -53,6 +57,9 @@ public class Calculadora extends JFrame implements ActionListener {
         btnUndo = crearBoton("Undo", panelBotones);
         btnRedo = crearBoton("Redo", panelBotones);
         btnIgual = crearBoton("=", panelBotones);
+
+
+
     }
 
     private JButton crearBoton(String texto, JPanel panel) {
@@ -69,16 +76,60 @@ public class Calculadora extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
 
-        // Lógica SOLO para los números
         if (cmd.matches("\\d")) {
             if (display.getText().equals("0")) {
                 display.setText(cmd);
             } else {
                 display.setText(display.getText() + cmd);
             }
+        } else if (cmd.equals("C")) {
+            display.setText("0");
         }
-
     }
-    
 
+    public void sumar(double valor) {
+        double actual = Double.parseDouble(display.getText());
+        double resultado = actual + valor;
+        display.setText(String.valueOf(resultado));
+    }
+
+    public void restar(double valor) {
+        double actual = Double.parseDouble(display.getText());
+        double resultado = actual - valor;
+        display.setText(String.valueOf(resultado));
+    }
+
+    public void multiplicar(double valor) {
+        double actual = Double.parseDouble(display.getText());
+        double resultado = actual * valor;
+        display.setText(String.valueOf(resultado));
+    }
+
+    public void division(double valor) {
+        double actual = Double.parseDouble(display.getText());
+        if (valor == 0) {
+            JOptionPane.showMessageDialog(this, "Error: división por cero");
+            return;
+        }
+        double resultado = actual / valor;
+        display.setText(String.valueOf(resultado));
+    }
+
+    public void borrar() {
+        display.setText("0");
+    }
+
+    public void undo() {
+    }
+
+    public void redo() {
+    }
+
+
+    public Memento crearMemento() {
+        return null;
+    }
+
+    public void restaurar(Memento memento) {
+    }
 }

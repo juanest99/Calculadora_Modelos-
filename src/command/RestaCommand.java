@@ -1,5 +1,5 @@
 package command;
-
+import memento.Memento;
 
 import calculadora.Calculadora;
 
@@ -16,12 +16,12 @@ public class RestaCommand implements Command {
 
     @Override
     public void execute() {
-        mementoPrevio = calculadora.crearMemento();
+        memento = calculadora.crearMemento();
         calculadora.sumar(valor);
     }
 
     @Override
     public void undo() {
-        calculadora.restaurar(mementoPrevio);
+        calculadora.restaurar(memento);
     }
 }

@@ -1,6 +1,6 @@
 package command;
 import calculadora.Calculadora;
-
+import memento.Memento;
 public class DividirCommand implements Command{
 
     private double valor;
@@ -14,12 +14,12 @@ public class DividirCommand implements Command{
 
     @Override
     public void execute() {
-        mementoPrevio = calculadora.crearMemento();
+        memento = calculadora.crearMemento();
         calculadora.sumar(valor);
     }
 
     @Override
     public void undo() {
-        calculadora.restaurar(mementoPrevio);
+        calculadora.restaurar(memento);
     }
 }
