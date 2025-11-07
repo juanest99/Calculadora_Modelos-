@@ -17,7 +17,7 @@ public class RestaCommand implements Command {
     @Override
     public void execute() {
         memento = calculadora.crearMemento();
-        calculadora.sumar(valor);
+        calculadora.restar(valor);
     }
 
     @Override

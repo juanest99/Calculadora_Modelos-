@@ -1,4 +1,5 @@
 package calculadora;
+
 import command.*;
 import memento.Memento;
 
@@ -11,6 +12,9 @@ public class Calculadora extends JFrame implements ActionListener {
     private JTextField display;
     private JButton btnSuma, btnResta, btnMult, btnDiv, btnClear, btnUndo, btnRedo, btnIgual;
     private JButton[] numeros = new JButton[10];
+
+    private double acumulador = 0;
+    private String operadorPendiente = "";
 
     public Calculadora() {
         setTitle("calculadora.Calculadora con Command & Memento");
@@ -39,7 +43,6 @@ public class Calculadora extends JFrame implements ActionListener {
         panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(panelBotones, BorderLayout.CENTER);
 
-        // Números
         for (int i = 0; i <= 9; i++) {
             numeros[i] = new JButton(String.valueOf(i));
             numeros[i].setFont(new Font("Arial", Font.BOLD, 20));
@@ -50,16 +53,80 @@ public class Calculadora extends JFrame implements ActionListener {
         }
 
         btnSuma = crearBoton("+", panelBotones);
+        btnSuma.addActionListener(evt -> {
+            // guardar primer operando y operador pendiente, no ejecutar aún
+            acumulador = Double.parseDouble(display.getText());
+            operadorPendiente = "+";
+            display.setText("0");
+        });
+
         btnResta = crearBoton("-", panelBotones);
+        btnResta.addActionListener(evt -> {
+            acumulador = Double.parseDouble(display.getText());
+            operadorPendiente = "-";
+            display.setText("0");
+        });
+
         btnMult = crearBoton("×", panelBotones);
+        btnMult.addActionListener(evt -> {
+            acumulador = Double.parseDouble(display.getText());
+            operadorPendiente = "×";
+            display.setText("0");
+        });
+
         btnDiv = crearBoton("÷", panelBotones);
+        btnDiv.addActionListener(evt -> {
+            acumulador = Double.parseDouble(display.getText());
+            operadorPendiente = "÷";
+            display.setText("0");
+        });
+
         btnClear = crearBoton("C", panelBotones);
+        btnClear.addActionListener(evt -> {
+            borrar();
+            acumulador = 0;
+            operadorPendiente = "";
+        });
+
         btnUndo = crearBoton("Undo", panelBotones);
+        btnUndo.addActionListener(evt -> undo());
+
         btnRedo = crearBoton("Redo", panelBotones);
+        btnRedo.addActionListener(evt -> redo());
+
         btnIgual = crearBoton("=", panelBotones);
+        btnIgual.addActionListener(evt -> {
+            if (operadorPendiente == null || operadorPendiente.isEmpty()) return;
+            Command cmd = null;
+
+            switch (operadorPendiente) {
+                case "+":
+                    cmd = new SumarCommand(this, acumulador);
+                    break;
+                case "-":
+                    cmd = new RestaCommand(this, acumulador);
+                    break;
+                case "×":
+                    cmd = new MultiplicarCommand(this, acumulador);
+                    break;
+                case "÷":
+                    cmd = new DividirCommand(this, acumulador);
+                    break;
+            }
+
+            if (cmd != null) {
+                cmd.execute();
+
+            }
 
 
-
+            operadorPendiente = "";
+            try {
+                acumulador = Double.parseDouble(display.getText());
+            } catch (NumberFormatException ex) {
+                acumulador = 0;
+            }
+        });
     }
 
     private JButton crearBoton(String texto, JPanel panel) {
@@ -67,7 +134,6 @@ public class Calculadora extends JFrame implements ActionListener {
         b.setFont(new Font("Arial", Font.BOLD, 18));
         b.setBackground(new Color(47, 174, 229));
         b.setForeground(Color.WHITE);
-        b.addActionListener(this);
         panel.add(b);
         return b;
     }
@@ -75,17 +141,15 @@ public class Calculadora extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
-
         if (cmd.matches("\\d")) {
             if (display.getText().equals("0")) {
                 display.setText(cmd);
             } else {
                 display.setText(display.getText() + cmd);
             }
-        } else if (cmd.equals("C")) {
-            display.setText("0");
         }
     }
+
 
     public void sumar(double valor) {
         double actual = Double.parseDouble(display.getText());
@@ -95,7 +159,7 @@ public class Calculadora extends JFrame implements ActionListener {
 
     public void restar(double valor) {
         double actual = Double.parseDouble(display.getText());
-        double resultado = actual - valor;
+        double resultado = valor - actual;
         display.setText(String.valueOf(resultado));
     }
 
@@ -107,11 +171,11 @@ public class Calculadora extends JFrame implements ActionListener {
 
     public void division(double valor) {
         double actual = Double.parseDouble(display.getText());
-        if (valor == 0) {
+        if (actual== 0) {
             JOptionPane.showMessageDialog(this, "Error: división por cero");
             return;
         }
-        double resultado = actual / valor;
+        double resultado = valor /actual;
         display.setText(String.valueOf(resultado));
     }
 
@@ -119,17 +183,12 @@ public class Calculadora extends JFrame implements ActionListener {
         display.setText("0");
     }
 
-    public void undo() {
-    }
+    public void undo() { }
 
-    public void redo() {
-    }
+    public void redo() { }
 
+    public Memento crearMemento() { return null; }
 
-    public Memento crearMemento() {
-        return null;
-    }
+    public void restaurar(Memento memento) { }
 
-    public void restaurar(Memento memento) {
-    }
 }

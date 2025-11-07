@@ -15,7 +15,7 @@ public class DividirCommand implements Command{
     @Override
     public void execute() {
         memento = calculadora.crearMemento();
-        calculadora.sumar(valor);
+        calculadora.division(valor);
     }
 
     @Override
