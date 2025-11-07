@@ -1,6 +1,9 @@
-import calculadora.Calculadora;
+import calculadora.ControladorCalculadora;
 
-
-void main() {
-    Calculadora calculadora = new Calculadora();
+public class Main {
+    public static void main(String[] args) {
+        new ControladorCalculadora();
+    }
 }
+
+

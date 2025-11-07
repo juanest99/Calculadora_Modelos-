@@ -3,8 +3,8 @@ package command;
 import java.util.Stack;
 
 public class GestorComandos {
-    private Stack<Command> undoStack = new Stack<>();
-    private Stack<Command> redoStack = new Stack<>();
+    private final Stack<Command> undoStack = new Stack<>();
+    private final Stack<Command> redoStack = new Stack<>();
 
     public void ejecutarComando(Command c) {
         c.execute();

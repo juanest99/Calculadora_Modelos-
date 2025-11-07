@@ -16,7 +16,7 @@ public class MultiplicarCommand implements Command{
     @Override
     public void execute() {
         memento= calculadora.crearMemento();
-        calculadora.sumar(valor);
+        calculadora.multiplicar(valor);
     }
 
     @Override
