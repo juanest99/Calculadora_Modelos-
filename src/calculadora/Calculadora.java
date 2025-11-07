@@ -1,3 +1,5 @@
+package calculadora;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,7 +11,7 @@ public class Calculadora extends JFrame implements ActionListener {
     private JButton[] numeros = new JButton[10];
 
     public Calculadora() {
-        setTitle("Calculadora con Command & Memento");
+        setTitle("calculadora.Calculadora con Command & Memento");
         setSize(400, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
